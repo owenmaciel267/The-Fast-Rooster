@@ -13,10 +13,12 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
     box-sizing: border-box;
+   
 }
 /* header{
      /* background-color: aquamarine; 
 } */
+
 .header{
 
     display: flex;
@@ -66,6 +68,7 @@ h1, h2{
     --clip: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     border-radius: 5px;
     box-shadow:  0px 10px 20px rgba(0, 0, 0, 0.096);
+    z-index: 1000;
 }
 
 .menu__nesting{
@@ -88,14 +91,16 @@ h1, h2{
 
 
     border: 2px solid rgba(0, 0, 0, 0.178);
-    z-index: 1000;
+    z-index: 1200;
 }
 .menu__nesting .lis a{
     color: white;
+
 }
 
 .lis{
     padding: 10px;
+    z-index: 1000;
 }
 
 .hambur{
@@ -161,7 +166,7 @@ h1, h2{
     bottom: -17%;
     width: auto;
     height: auto;
-    background-color: rgba(0, 0, 0, 0.400);
+    /* background-color: rgba(0, 0, 0, 0.400); */
     z-index: 99;
     border-radius: 20px;
 }
@@ -205,13 +210,13 @@ h1, h2{
 .grupo{
     width: 500px;
     height: 600px;
-    background-color: rgb(225, 34, 34);
+    /* background-color: rgb(225, 34, 34); */
     position: relative;
 }
 .grupo1{
     width: 500px;
     height: 400px;
-    background-color: brown;
+    /* background-color: brown; */
     border-radius: 20px;
 
 }
@@ -414,7 +419,7 @@ h1, h2{
     align-items: center;
     
 }
-form{
+.formulario_contacto form{
     /* display: flex; */
     padding: 50px 55px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -475,7 +480,7 @@ input::placeholder, textarea::placeholder{
     text-decoration: none;
 }
 
-.btn{
+.btn, .btn-eliminar, .btn-actualizar{
     font-size: 16px;
     color: #000000;
     border: 0;
@@ -484,7 +489,7 @@ input::placeholder, textarea::placeholder{
     cursor: pointer;
 }
 
-.btn:hover{
+.btn:hover, .btn-eliminar:hover, .btn-actualizar:hover {
     background-color: #4baee0;
 }
 
