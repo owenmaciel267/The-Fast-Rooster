@@ -1,9 +1,125 @@
+<?php
+    include("config/config.php");
+    $ID= "";
+    $id_eliminar = "";
+    $nuevoNombre = "";
+    $nuevoTelefono = "";
+    $nuevoEmail = "";
+    $nuevoMensaje = "";
+    
+    // si apreté botón Actualizar
+            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["actualizar"])) {
+                $ID = $_POST["ID"];
+                // $nuevoNombre = $_POST["nuevoNombre"];
+                // $nuevoTelefono = $_POST["nuevoTelefono"];
+                // $nuevoEmail = $_POST["nuevoEmail"];
+                // $nuevoMensaje = $_POST["nuevoMensaje"];
+
+                $stmt = $conexion->prepare("SELECT * FROM zapa WHERE ID=?");
+                $stmt->bind_param("i", $ID);
+                
+                if ($stmt->execute()) {
+                    $stmt->bind_result($ID, $nuevoNombre, $nuevoTelefono, $nuevoEmail, $nuevoMensaje);
+                    while ($stmt->fetch()) {
+                        // Los datos del usuario se cargarán en los campos del formulario
+                    }
+                } else {
+                    echo "Error: " . $stmt->error;
+                }
+            }
+            echo $ID;
+            var_dump($nuevoNombre, $nuevoTelefono, $nuevoEmail, $nuevoMensaje);
+            
+            // Si apreta eliminar
+            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["eliminar"])) {
+                $id_eliminar = $_POST["ID"];
+            }
+         
+            // si aprieto el botón Update
+            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update"])) {
+                $ID = $_POST["ID"];
+                $nuevoNombre = $_POST["nuevo-Nombre"];
+                $nuevoTelefono = $_POST["nuevo-Telefono"];
+                $nuevoEmail = $_POST["nuevo-Email"];
+                $nuevoMensaje = $_POST["nuevo-Mensaje"];
+
+                   // Validar la entrada
+                   if (!empty($ID) && !empty($nuevoNombre) && !empty($nuevoTelefono) && !empty($nuevoEmail)  && !empty($nuevoMensaje)) {
+                    // Crear una declaración preparada
+                    $stmt = $conexion->prepare("UPDATE zapa SET nombre=?, telefono=?, email=?, mensaje=? WHERE ID=?");
+                    $stmt->bind_param("ssssi", $nuevoNombre, $nuevoTelefono, $nuevoEmail,$nuevoMensaje,$ID);
+
+                    // Ejecutar la declaración preparada
+                    if ($stmt->execute()) {
+                                echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                Registro actualizado con éxito.
+                                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                </div>";
+                        } else {
+                        echo "Error: " . $stmt->error;
+                    }
+
+                    // Cerrar la declaración preparada
+                    $stmt->close();
+                } else {
+                    echo "Datos de entrada inválidos.";
+                }
+            }
+            
+            
+            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete"])) {
+                $Id = $_POST["id_eliminar"];
+            
+                // Validar la entrada
+                if (!empty($Id)) {
+                    // Crear una declaración preparada
+                    $stmt = $conexion->prepare("DELETE FROM zapa WHERE ID=?");
+                    $stmt->bind_param("i", $Id);
+            
+                    // Ejecutar la declaración preparada
+                    if ($stmt->execute()) {
+                                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                Registro eliminado con éxito.
+                                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                </div>";
+                    } else {
+                        echo "Error: " . $stmt->error;
+                    }
+            
+                    // Cerrar la declaración preparada
+                    $stmt->close();
+                } else {
+                    echo "Datos de entrada inválidos.";
+                }
+            }
+            
+         
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="wIDth=device-wIDth, initial-scale=1.0">
     <!-- Style -->
     <link rel="stylesheet" href="./style/style.css">
     <!-- favicon -->
@@ -13,10 +129,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     
-    <title>Tabla pedidos</title>
+    <title>Tabla pedIDos</title>
 </head>
-<body>
-    <nav class="header">
+    <body>
+        <nav class="header">
             <div class="logo">
                 <a href="./index.html">
                     <img src="./logo/logo11.png" alt="">
@@ -54,7 +170,7 @@
                 </li>
 
                 <li class="lis menu__item" data-aos="fade-right" data-aos-duration="2000"><a href="#" >Sobre</a></li>
-                <li class="lis menu__item" data-aos="fade-right" data-aos-duration="2000"><a href="./crud.php">Pedidos</a></li>
+                <li class="lis menu__item" data-aos="fade-right" data-aos-duration="2000"><a href="./crud.php">PedIDos</a></li>
             </ul>
             <div class="hambur">
                 <span></span>
@@ -62,22 +178,93 @@
                 <span></span>
             </div>
         </nav>
+        
+        
+        
+        <div class="container-fluID mb-2 shadow bg-black">
+            <div class="row justify-content-center align-items-center g-2">
+                <div class="col">
+                    <!-- Formulario para actualizar un usuario -->
+                    <h2 class="text-white">Actualizar Usuario</h2>
+                    <form action="./crud.php" method="POST" class="row g-3 mb-3">
+                    <div class="col">
 
+                        <label for="ID" class="form-label">ID de Usuario:</label>
+							<input type="number" name="ID" id="ID" class="form-control" value="<?php echo  $ID; ?>"  required readonly>
+
+                    </div>
+                    <!-- <input type="hidden" name="ID" value="<//?php echo $ID; ?>"> -->
+                    <div class="col">
+
+                        <label for="nuevo-Nombre" class="form-label">Nuevo Nombre:</label>
+						<input type="text" name="nuevo-Nombre" id="nuevo-Nombre" class="form-control" value="<?php echo  $nuevoNombre; ?>"  required >
+
+                    </div>
+                    <div class="col">
+                        <label for="nuevo-Telefono" class="form-label">numero telefono:</label>
+						<input type="number" name="nuevo-Telefono" id="nuevo-Telefono" class="form-control" value="<?php echo  $nuevoTelefono; ?>"  required >
+
+                    </div>
+                    <div class="col">
+
+                        
+
+                        <label for="nuevo-Email" class="form-label">Nuevo email:</label>
+						<input type="text" name="nuevo-Email" id="nuevo-Email" class="form-control" value="<?php echo  $nuevoEmail; ?>"  required >
+
+                    </div>
+                    <div class="col">
+
+                        <label for="nuevo-Mensaje" class="form-label">Nuevo Mensaje:</label>
+						<input type="text" name="nuevo-Mensaje" id="nuevo-Mensaje" class="form-control" value="<?php echo  $nuevoMensaje; ?>"  required >
+
+                    </div>
+                    
+                        <input type="submit" name="update" value="update" class="btn-actualizar">
+
+                    </form>
+                    </div>
+            </div>
+        </div>
+        <div class="     my-2 shadow bg-black container-fluid">
+			<div class="row justify-content-center align-items-center g-2">
+				<div class="col">
+					<!-- Formulario para eliminar un usuario -->
+					<h2 class="text-white">Eliminar Usuario</h2>
+					<form action="crud.php" method="post" class="row g-3 mb-3">
+						<div class="col">
+							<label for="id_eliminar" class="form-label">ID de Usuario:</label>
+							<input type="number" name="id_eliminar" id="id_eliminar" class="form-control" value="<?php echo  $id_eliminar; ?>"  required readonly>
+						</div>
+							<input type="submit" name="delete" value="delete" class="btn-actualizar">
+					</form>
+				</div>
+			</div>
+		</div>
+    </body>
+
+</html>
+     
         
-        
-        
-        
-        <?php
+<?php
         include("config/config.php");
+
+        $ID = "";
+            $id_eliminar = "";
+            $nuevoNombre = "";
+            $nuevoTelefono = "";
+            $nuevoEmail = "";
+            $nuevoMensaje = "";
 
         // Crear (Insertar)
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])) {
+
             $nombre = $_POST["nombre"];
             $telefono = $_POST["telefono"];
             $email = $_POST["email"];
             $mensaje = $_POST["mensaje"];
             
-            // Validar la entrada (puedes agregar más validaciones según sea necesario)
+            // ValIDar la entrada (puedes agregar más valIDaciones según sea necesario)
             if (!empty($nombre) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
         
                         // Crear una declaración preparada
@@ -94,12 +281,13 @@
                 // Cerrar la declaración preparada
                 $stmt->close();
             } else {
-                echo "Datos de entrada inválidos.";
+                echo "Datos de entrada inválIDos.";
             }
         }
 
         // Leer (Seleccionar)
         $consulta = "SELECT * FROM zapa";
+        // $buscador = "WHERE `nombre` LIKE '%put%'";
         $resultado = $conexion->query($consulta);
 
         if ($resultado->num_rows > 0) {
@@ -107,26 +295,28 @@
             echo '<table class=" table table-dark table-striped table-hover">';
             // echo    "<caption> TABLA ENCABEZADO </caption>";
             echo "<tr>";
-                echo    '<th scope="col">id</th>';
+                echo    '<th scope="col">ID</th>';
                 echo    '<th scope="col">nombre</th>';
                 echo    '<th scope="col">telefono</th>';
                 echo    '<th scope="col">email</th>';
                 echo    '<th scope="col">mensaje</th>';
-                echo    '<th scope="col">actividad</th>';
+                echo    '<th scope="col">activIDad</th>';
             echo "</tr>";
             echo '<tbody>';
                 while ($fila = $resultado->fetch_assoc()) {
                     echo "<tr>";
-                    echo   '<td scope="row"> ' . $fila["ID"] . "</td>"; // generalmente no mostramos públicamente el id
+                    echo   '<td scope="row"> ' . $fila["ID"] . "</td>"; // generalmente no mostramos públicamente el ID
                     echo    "<td> " . $fila["nombre"] . "</td>";
                     echo    "<td> " . $fila["telefono"] . "</td>";
                     echo    "<td> " . $fila["email"] . "</td>";
                     echo    "<td> " . $fila["mensaje"] . "</td>";
                     echo "<td>";
-                        echo "<form action='crud.php' method='post'>";
-                            echo '<input type="submit" name="actualizar" class="btn-actualizar" value="Actualizar">';	
-                            echo '<input type="submit" name="eliminar" value="Eliminar" class="mx-3 btn-eliminar">';
-                        echo "</form>";
+                        echo "<form action='crud.php' method='POST'>";
+
+                            echo '<input type="submit" name="actualizar"  class="btn-actualizar" value="actualizar">';  
+                            echo '<input type="submit" name="eliminar" value="eliminar" class="mx-3 btn-eliminar">';
+                            echo "<input type='hidden' name='ID' value='" . $fila["ID"] . "'>"; 
+                        echo "</form>"; 
                     echo "</td>";
                     echo "</tr>" ;
                 }
@@ -135,8 +325,13 @@
             } else {
                 echo "No se encontraron registros.";
             }
-        ?>
-        
-    </body>
 
-</html> 
+
+        // include("config/config.php");
+        
+            // Actualizar
+            // include("config/config.php");
+            
+
+
+?> 
